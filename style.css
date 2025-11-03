@@ -1,0 +1,234 @@
+* { box-sizing: border-box; transition: all 0.3s ease; }
+
+.navbar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  background: #0b3b66;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: bold;
+}
+.nav-links a:hover { color: #00ccff; }
+
+#cart-count {
+  background: #ff4444;
+  padding: 3px 7px;
+  border-radius: 50%;
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+/* General */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f6f8;
+  color: #222;
+  margin: 0;
+  scroll-behavior: smooth;
+}
+
+header {
+  background: linear-gradient(90deg, #0066cc, #0099ff);
+  color: white;
+  text-align: center;
+  padding: 80px 20px 30px;
+  margin-top: 50px;
+}
+
+#buscador {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px auto;
+  flex-wrap: wrap;
+}
+
+#buscar, #filtro {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 220px;
+}
+
+/* Productos */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.producto {
+  background: #fff;
+  border: 1px solid #e6eef9;
+  border-radius: 10px;
+  text-align: left;
+  padding: 12px;
+  transform: scale(1);
+}
+.producto:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.producto img {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+/* Botones */
+button {
+  background: #0066cc;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+button:hover { background: #004a99; }
+
+button.danger {
+  background: #d9534f;
+}
+button.danger:hover {
+  background: #c9302c;
+}
+
+/* Carrito */
+#tabla-carrito {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+#tabla-carrito th, #tabla-carrito td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+#tabla-carrito th {
+  background: #0b3b66;
+  color: #fff;
+}
+
+.toast {
+  visibility: hidden;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #00cc66;
+  color: white;
+  padding: 14px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.toast.show {
+  visibility: visible;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+@keyframes fadein { from {bottom: 10px; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+@keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 10px; opacity: 0;} }
+
+.loader {
+  border: 5px solid #eee;
+  border-top: 5px solid #007bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.card-checkout {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+#formEnvio {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+#formEnvio input, #formEnvio select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+}
+
+#formEnvio button {
+  width: fit-content;
+  padding: 10px 18px;
+  background: #0066cc;
+  color: white;
+  border-radius: 6px;
+  border: none;
+  align-self: center;
+}
+
+#formEnvio button:hover { background: #004a99; }
+
+/* Comprobante */
+.comprobante {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+.comprobante h1 {
+  text-align: center;
+  color: white;
+  background: #007bff;
+  padding: 12px;
+  border-radius: 6px;
+}
+.comprobante table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.comprobante th, .comprobante td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+.comprobante th {
+  background-color: #0066cc;
+  color: white;
+}
+.comprobante h2 {
+  text-align: center;
+  color: #333;
+  margin-top: 25px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #0f1720;
+  color: #cbd5e1;
+  margin-top: 40px;
+}

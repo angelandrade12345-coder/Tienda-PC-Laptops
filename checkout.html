@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="author" content="Angel Yael Andrade Bautista, Brandon Misael Leija Álvarez">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finalizar Compra</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/a2e0a6c3c2.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header>🧾 Finalizar Compra</header>
+
+  <main>
+    <section class="card card-checkout">
+      <h2>Resumen de compra</h2>
+      <div id="summary"></div>
+    </section>
+
+    <section class="card card-checkout">
+      <h2>Datos de envío o recogida</h2>
+      <form id="formEnvio">
+        <label>Nombre completo:</label>
+        <input type="text" id="nombre" required>
+
+        <label>Correo electrónico:</label>
+        <input type="email" id="correo" required>
+
+        <label>Teléfono:</label>
+        <input type="tel" id="telefono" pattern="[0-9]{10}" required placeholder="10 dígitos">
+
+        <label>Tipo de entrega:</label>
+        <select id="tipoEntrega">
+          <option value="tienda">Recoger en tienda</option>
+          <option value="envio">Envío a domicilio</option>
+        </select>
+
+        <div id="campoDireccion">
+          <label>Dirección:</label>
+          <input type="text" id="direccion">
+        </div>
+
+        <label>Método de pago:</label>
+        <select id="metodoPago">
+          <option value="efectivo">Efectivo</option>
+          <option value="tarjeta">Tarjeta</option>
+          <option value="paypal">PayPal</option>
+        </select>
+
+        <button type="submit"><i class="fa-solid fa-file-invoice-dollar"></i> Generar comprobante</button>
+      </form>
+      <div id="mensajeGracias"></div>
+    </section>
+  </main>
+
+  <footer><p>Tienda PC & Laptops © 2025</p></footer>
+
+  <script>
+  const TAX = 0.16;
+  const cart = JSON.parse(localStorage.getItem('tienda_cart') || '{}');
+  const summary = document.getElementById('summary');
+  const campoDireccion = document.getElementById('campoDireccion');
+
+  const formatUSD = v => '$' + v.toFixed(2);
+
+  const PRODUCTS = JSON.parse(localStorage.getItem('productos_data')) || [];
+
+  function renderSummary() {
+    if (Object.keys(cart).length === 0) {
+      summary.innerHTML = '<p>Carrito vacío.</p>';
+      return;
+    }
+
+    let subtotal = 0;
+    const table = document.createElement('table');
+    table.innerHTML = '<thead><tr><th>Producto</th><th>Cant.</th><th>Precio</th><th>Subtotal</th></tr></thead>';
+    const tbody = document.createElement('tbody');
+
+    for (const id in cart) {
+      const item = PRODUCTS.find(p => p.id === id);
+      if (!item) continue;
+      const qty = cart[id];
+      const line = item.precio * qty;
+      subtotal += line;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${item.nombre}</td>
+        <td>${qty}</td>
+        <td>${formatUSD(item.precio)}</td>
+        <td>${formatUSD(line)}</td>`;
+      tbody.appendChild(tr);
+    }
+
+    table.appendChild(tbody);
+    const tax = subtotal * TAX;
+    const total = subtotal + tax;
+    summary.innerHTML = `
+      <div style="overflow-x:auto;">${table.outerHTML}</div>
+      <p><strong>Subtotal:</strong> ${formatUSD(subtotal)}</p>
+      <p><strong>IVA (16%):</strong> ${formatUSD(tax)}</p>
+      <p><strong>Total:</strong> ${formatUSD(total)}</p>`;
+  }
+
+  renderSummary();
+
+  document.getElementById('tipoEntrega').addEventListener('change', e => {
+    campoDireccion.style.display = e.target.value === 'envio' ? 'block' : 'none';
+  });
+
+  document.getElementById('formEnvio').addEventListener('submit', e => {
+    e.preventDefault();
+
+    const nombre = document.getElementById('nombre').value.trim();
+    const correo = document.getElementById('correo').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+    const direccion = document.getElementById('direccion').value.trim();
+    const tipo = document.getElementById('tipoEntrega').value;
+    const pago = document.getElementById('metodoPago').value;
+
+    if (!nombre || !correo || telefono.length !== 10) {
+      alert("Completa todos los campos correctamente.");
+      return;
+    }
+
+    if (!confirm("¿Deseas generar tu comprobante?")) return;
+
+    //Generar comprobante 
+    const comprobante = window.open('', '', 'width=900,height=700');
+    comprobante.document.write(`
+      <html><head><title>Comprobante</title>
+      <link rel="stylesheet" href="style.css"></head><body>
+      <div class="comprobante">
+        <h1>Comprobante de compra 🧾</h1>
+        <p><strong>Cliente:</strong> ${nombre}</p>
+        <p><strong>Correo:</strong> ${correo}</p>
+        <p><strong>Teléfono:</strong> ${telefono}</p>
+        <p><strong>Entrega:</strong> ${tipo === 'envio' ? 'Envío a domicilio' : 'Recoger en tienda'}</p>
+        ${tipo === 'envio' ? `<p><strong>Dirección:</strong> ${direccion}</p>` : ''}
+        <p><strong>Método de pago:</strong> ${pago}</p>
+        ${summary.innerHTML}
+        <h2>¡Gracias por tu compra!</h2>
+      </div></body></html>
+    `);
+
+    comprobante.document.close();
+    comprobante.focus();
+    comprobante.print();
+
+    document.getElementById('mensajeGracias').innerHTML = `
+      <h3>✅ Gracias por tu compra, ${nombre}!</h3>
+      <p>Recibirás un correo con la información del pedido.</p>
+    `;
+
+    localStorage.removeItem('tienda_cart');
+  });
+</script>
+
+</body>
+</html>
